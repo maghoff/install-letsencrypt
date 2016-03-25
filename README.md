@@ -6,6 +6,12 @@ to your servers for any number of sites, including automatic renewal.
 It is only intended to work if you are running nginx as your web server and it
 has only been tested to work on Ubuntu.
 
+Dependencies
+------------
+`curl`, `nginx` and `lockfile` from, surprisingly, `procmail`.
+
+`lockfile` is necessary to be able to safely edit `/etc/sudoers`.
+
 Install
 -------
 If you have verified the script and you trust github or you simply don't like
