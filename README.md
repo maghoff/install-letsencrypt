@@ -8,9 +8,12 @@ has only been tested to work on Ubuntu.
 
 Dependencies
 ------------
-`curl`, `nginx` and `lockfile` from, surprisingly, `procmail`.
+`openssl`, `curl`, `nginx` and, surprisingly, `procmail`.
 
-`lockfile` is necessary to be able to safely edit `/etc/sudoers`.
+`procmail` comes with `lockfile`, which is used for safely editing
+`/etc/sudoers`. There is [an issue for getting rid of this dependency][#1].
+
+#1: https://github.com/maghoff/install-letsencrypt/issues/1
 
 Install
 -------
