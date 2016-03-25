@@ -58,7 +58,7 @@ server {
 
     location /.well-known/acme-challenge/ {
         alias /var/www/challenges/;
-        try_files \\$uri =404;
+        try_files \\\$uri =404;
     }
 }
 EOF
