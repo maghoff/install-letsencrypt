@@ -11,9 +11,9 @@ Dependencies
 `openssl`, `curl`, `nginx` and, surprisingly, `procmail`.
 
 `procmail` comes with `lockfile`, which is used for safely editing
-`/etc/sudoers`. There is [an issue for getting rid of this dependency][#1].
+`/etc/sudoers`. There is [an issue for getting rid of this dependency][1].
 
-#1: https://github.com/maghoff/install-letsencrypt/issues/1
+1: https://github.com/maghoff/install-letsencrypt/issues/1
 
 Install
 -------
