@@ -28,8 +28,7 @@ Otherwise:
 
  1. Download [`install.sh`](https://raw.githubusercontent.com/maghoff/install-letsencrypt/master/install.sh):
 
-        curl -LO \
-            https://raw.githubusercontent.com/maghoff/install-letsencrypt/master/install.sh \
+        curl -LO https://raw.githubusercontent.com/maghoff/install-letsencrypt/master/install.sh
 
  2. Read through it and verify that you trust it, or hire somebody to do this
     job for you.
