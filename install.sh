@@ -89,6 +89,10 @@ server {
         alias /var/www/challenges/;
         try_files \\\$uri =404;
     }
+
+    location / {
+        return 301 https://\$host\$request_uri;
+    }
 }
 EOF
 ln -s /etc/nginx/sites-available/letsencrypt-\$CN /etc/nginx/sites-enabled/
