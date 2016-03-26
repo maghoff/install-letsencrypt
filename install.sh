@@ -73,7 +73,7 @@ fi
 if [ ! -f "\$KEY" ]
 then
 	echo "Generating key file \$KEY..."
-	echo "openssl genrsa 4096 > \$KEY"
+	openssl genrsa 4096 > \$KEY
 fi
 
 # Generate certificate signing request
