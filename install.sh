@@ -49,13 +49,32 @@ cat > /var/letsencrypt/add.sh <<EOF_ADD
 
 # This script must be run as root
 
-# TODO: Deal with command line arguments
-CN="\$1"
-KEY="\$2"
+if [ \$# -lt 1 ] || [ \$# -gt 2 ]
+then
+	echo >&2 "Usage: \$0 domain-name [key-file]"
+	echo >&2
+	echo >&2 "If key-file is not specified it will default to"
+	echo >&2 "    /etc/ssl/private/domain-name.key"
+	echo >&2
+	echo >&2 "If key-file does not exist, it will be generated like this"
+	echo >&2 "    openssl genrsa 4096 > key-file"
+	exit 1
+fi
 
-# Use for helpful error message if \$KEY is missing:
-# #generate a domain private key (if you haven't already)
-# openssl genrsa 4096 > /etc/ssl/private/\$CN.key
+CN="\$1"
+
+if [ \$# -eq 2 ]
+then
+	KEY="\$2"
+else
+	KEY="/etc/ssl/private/\$CN"
+fi
+
+if [ ! -f "\$KEY" ]
+then
+	echo "Generating key file \$KEY..."
+	echo "openssl genrsa 4096 > \$KEY"
+fi
 
 # Generate certificate signing request
 openssl req -new -sha256 -key "\$KEY" -subj "/CN=\$CN" > /var/letsencrypt/\$CN.csr
