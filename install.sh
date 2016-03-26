@@ -120,19 +120,18 @@ cat > /var/letsencrypt/update.sh <<EOF
 #!/bin/bash
 
 CN="\$1"
+INTERMEDIATE="https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem"
 
 set -e
 
-/usr/bin/python \
-        /var/letsencrypt/acme_tiny.py \
-        --account-key /var/letsencrypt/account.key \
-        --csr "/var/letsencrypt/\$CN.csr" \
-        --acme-dir /var/www/challenges/ \
-        > "/var/letsencrypt/\$CN.crt"
-
-curl 'https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.pem' > /var/letsencrypt/intermediate.pem
-
-cat /var/letsencrypt/\$CN.crt /var/letsencrypt/intermediate.pem > /etc/ssl/certs/letsencrypt/\$CN.pem
+(
+	/usr/bin/python \\
+			/var/letsencrypt/acme_tiny.py \\
+			--account-key /var/letsencrypt/account.key \\
+			--csr "/var/letsencrypt/\$CN.csr" \\
+			--acme-dir /var/www/challenges/
+	curl "\$INTERMEDIATE"
+) > /etc/ssl/certs/letsencrypt/\$CN.pem
 
 sudo /usr/sbin/service nginx reload
 EOF
