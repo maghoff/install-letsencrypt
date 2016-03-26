@@ -5,11 +5,17 @@ ACME_TINY="https://raw.githubusercontent.com/diafygi/acme-tiny/master/acme_tiny.
 set -e
 set -o pipefail
 
+command -v openssl >/dev/null 2>&1 || { echo >&2 "I require openssl but it's not installed"; exit 1; }
+command -v lockfile >/dev/null 2>&1 || { echo >&2 "I require lockfile but it's not installed. Try installing procmail"; exit 1; }
+
 # `letsencrypt` user will own relevant files and execute certificate renewal script
 #
 # `letsencrypt` user does not need access to your private domain key, and should not
 # be allowed access to it.
-useradd --system letsencrypt
+if ! getent passwd letsencrypt > /dev/null
+then
+	useradd --system letsencrypt
+fi
 
 # Working stuff goes in /var/..., generated certs go in /etc/...
 mkdir -p /var/letsencrypt /var/www/challenges /etc/ssl/certs/letsencrypt
@@ -20,7 +26,11 @@ chmod 0700 /var/letsencrypt
 curl -L -o /var/letsencrypt/acme_tiny.py "$ACME_TINY"
 
 # RSA key for encrypting communication with Let's Encrypt's servers
-openssl genrsa 4096 > /var/letsencrypt/account.key
+if [ ! -f /var/letsencrypt/account.key ]
+then
+	echo "Generating account.key..."
+	openssl genrsa 4096 > /var/letsencrypt/account.key
+fi
 
 # The renewal script needs to be able to ask nginx to reload its config
 echo "Locking /etc/sudoers for edit..."
@@ -72,6 +82,12 @@ MINUTE=\$(( RANDOM % 60 ))
 service nginx reload
 
 sudo -u letsencrypt /var/letsencrypt/update.sh \$CN
+
+echo
+echo "Generated Let's Encrypt signed certificate. Use the following in your nginx config:"
+echo "    ssl on;"
+echo "    ssl_certificate /etc/ssl/certs/letsencrypt/\$CN.pem;"
+echo "    ssl_certificate_key \$KEY;"
 EOF_ADD
 chmod a+x /var/letsencrypt/add.sh
 
